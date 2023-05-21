@@ -16,18 +16,9 @@ Calculates layout points for spiral wrap assemblies
 
 *Outputs are presented as fractions 1/16th of an inch or greater.
 
-<<<<<<< HEAD
-Example Calculation:
-Shell diameter: 32.82
-Number of Wraps: 12
-Shell Length: 113.5
-Lead: 48
-Pitch: 4
-=======
 Example Calculation:  
 Shell diameter: 32.82  
 Number of Wraps: 12  
 Shell Length: 113.5  
 Lead: 48  
 Pitch: 4  
->>>>>>> develop
