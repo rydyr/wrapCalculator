@@ -1,5 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="description" content=""/>
+        <title> </title> 
+        <style>
 
-//Global object - shellWrap encapsulates required variables.
+body{
+    background-color: #f7ffff;
+}
+
+.pole {
+   color: red;
+   opacity: 0.1;
+}
+
+.input::placeholder{
+   color: black;
+   opacity: 1;
+   transition: opacity 0.15s ease-in-out;
+} 
+
+.input:focus::placeholder{
+   opacity: 0.1;
+}       
+
+
+.input {
+   font-size: 22px;
+   width: 70%;
+   height: 30px;
+   margin: 0;
+   padding: 0;
+   border: 1px, solid, #ccc;
+   transition: all 0.1s ease-in-out;
+}
+.input:focus{
+   font-size: 18px;
+   width:70%;
+   height: 36px;
+   margin-top: 1.5px;
+   margin-bottom: 1.5px;
+   padding: 0;
+   border: 3px, solid, #ccc;
+   outline: none;
+
+}
+
+.inputBox{
+   margin-top: 10px;
+}
+.button{
+   background-color: #1100ff;
+   color: white;
+   font-size: 15px;
+   width: 71%;
+   height: 40px;
+}
+div {
+   padding-left: 3%;
+}
+
+.head{
+   font-weight: bold;
+}
+#title{
+   font-size: 45px;
+   background-image: linear-gradient(270deg, #000000 0%, #ffffff 50%,#000000 100%);
+   background-size: 700% 700%;
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+   margin-top: 10px;
+} 
+
+.animate {    
+   animation: gradient 2s ease;   
+}
+@keyframes gradient{
+   0%{
+       background-position: 0% 50%;
+   }
+   50% {
+       background-position: 100% 50%;
+   }
+   100%{
+    background-position: 0% 50%;
+}
+}
+#lat,
+#circ {
+   line-height: 14px;       
+}
+.fracNum {
+   font-size: 75%;
+   vertical-align: super;
+   opacity: 0.5;
+}
+
+        </style>     
+    </head>
+    <body>
+        <div class="title-container">
+            <h1 id = "title">Wrap Calculator</h1>
+            <div class = "text-background"></div>
+        </div>
+
+        <div class = "inputBox">
+        <input  class = "input" type = "number" id = "diameter" placeholder = "shell diameter"></input>
+        <input class = "input" type = "number" id = "wrapNum" placeholder = "number of wraps"</input>
+        <input class = "input"  type = "number" id = "length" placeholder = "shell length"></input>
+        <input class = "input" type = "number" id = "lead" placeholder = "lead"></input>
+        <input class = "input" type = "number" id = "pitch" placeholder = "pitch"></input>
+        </div> 
+        <div><input class = "button" type = "button" id = "button"  value = "calculate"></input></div>
+            <div id = "lat"></div>
+            <div id = "circ"></div>
+
+       
+    </body>
+    <script>
+
+        //Global object - shellWrap encapsulates required variables.
 const shellWrap = {
     diameter: null,
     length: null,
@@ -166,3 +288,6 @@ function toFraction(decimal){
 
    return ` ${wholeNumberPart}  <span class="fracNum">${simplifiedNumerator}/${simplifiedDenominator}</span>`
 };
+
+    </script>
+ </html>
