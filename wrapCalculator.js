@@ -1,18 +1,16 @@
-
-let diam;
-let shell;
-let lea;
-let pit;
-let wrap;
-let start;
-let result2;
-let newText;
-const regex = /[\|]/g;
-const latPoint = [];
-const points = [];
-
-let isUnclicked = true;
-
+const shellWrap = {
+    diameter: null,
+    length: null,
+    lead: null,
+    pitch: null,
+    wrapNum: null,
+    start: null,
+    result: null,
+    newText: null,
+    latPoint: [],
+    points: [],
+    isUnclicked: true,
+};
 
 document.getElementById('button').addEventListener('click', eventHandler);
 document.getElementById('wrapNum').addEventListener('keyup',eventHandler);
@@ -20,15 +18,13 @@ document.getElementById('wrapNum').addEventListener('keyup',eventHandler);
 function anim(){
    const animate = document.getElementById('title');
    animate.classList.add('animate');
-
    setTimeout(()=> { 
         animate.classList.remove('animate');
    },2000);
 };
 
 function toggleSwitch(){
-   if(isUnclicked){
-    //   runAll();
+   if(shellWrap.isUnclicked){
     anim();
     document.getElementById('lat').innerHTML = "Loading...";
     setTimeout(()=> {  
@@ -38,7 +34,7 @@ function toggleSwitch(){
    }else{
        location.reload();
    }
-   isUnclicked = !isUnclicked;
+   shellWrap.isUnclicked = !shellWrap.isUnclicked;
    document.getElementById('button').value = "reset";
 };
 
@@ -46,51 +42,46 @@ function eventHandler(event){
    if(event.type === 'click' || event.type === 'keyup' && event.key === 'Enter'){
        toggleSwitch();
    }
-}
+};
 
 function getValue(){
-   diam = document.getElementById('diameter').value;
-   shell = document.getElementById('length').value;
-   lea = document.getElementById('lead').value;
-   pit  = document.getElementById('pitch').value;
-   wrap = document.getElementById('wrapNum').value;
+   shellWrap.diameter = document.getElementById('diameter').value;
+   shellWrap.length = document.getElementById('length').value;
+   shellWrap.lead = document.getElementById('lead').value;
+   shellWrap.pitch  = document.getElementById('pitch').value;
+   shellWrap.wrapNum = document.getElementById('wrapNum').value;
 };
 
 function wrapCalc(shellLength,lead,pitch){
-
-    let result = Math.floor(shellLength / lead);
-    result2 = result * lead;
-    let shellDiff = shellLength - result2;
-    start = shellDiff / 2;
-    if (start > pitch){
-        start = start % pitch;
+    const result = Math.floor(shellLength / lead);
+    shellWrap.result = result * lead;
+    let shellDiff = shellLength - shellWrap.result;
+    shellWrap.start = shellDiff / 2;
+    if (shellWrap.start > pitch){
+        shellWrap.start = shellWrap.start % pitch;
     }
-
-
-}
+};
 
 function loopAll(val1,val2,val3){
-    if(shell === 0 || lea === 0 || pit === 0){
+    if(val1 === 0 || val2 === 0 || val3 === 0){
         return;
     }
     const pap = Number(val3);
     for(let i = val1;i < val2;i+= pap){
-        let frac = toFraction(i)
-        latPoint.push(` ${frac}`)
-    } return latPoint;
-}
+        const frac = toFraction(i);
+        shellWrap.latPoint.push(` ${frac}`);
+    } return shellWrap.latPoint;
+};
 
 function formLat(arr){
     return arr.map((number,index) => (index + 1) % 5 === 0 ? `${number}<br><br>` : number)
     .join(' || ');
-}
+};
 
 function reformat(str){
-    const container = document.getElementById('lat');
-    const text = container.innerHTML;
-    newText = str.replace(/[\|]/g, '<span class="pole">|</span>')
-    return newText;
-}
+    shellWrap.newText = str.replace(/[\|]/g, '<span class="pole">|</span>')
+    return shellWrap.newText;
+};
 
 function piPoints(diam,wrapNum){
     if(diam === 0 || wrapNum === 0){
@@ -102,51 +93,51 @@ function piPoints(diam,wrapNum){
     for(let i = 1;i < wrapNum + 1;i++){
         if(point < circumfrence){
             point = circle * i;
-            let fracPoint = toFraction(point);
-            points.push(fracPoint); 
+            const fracPoint = toFraction(point);
+            shellWrap.points.push(fracPoint); 
         }            
     }    
-    return
-}
+    return shellWrap.points;
+};
 
 function prin(var1,var2){
     document.getElementById('lat').innerHTML = `<br><span class="head">Lat marks:</span><br><br><span class="pole">||</span>${var1}`;
     document.getElementById('circ').innerHTML = `<br><span class="head">Circ marks:</span><br><br><span class="pole">||</span>${var2}`;
-}
+};
 
 function director(){
     getValue();
-    if(diam !== "" && shell !== "" && lea !== "" && pit !== "" && wrap !== ""){
+    if(shellWrap.diameter !== null && shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null && shellWrap.wrapNum !== null){
         runAll();
-    } else if(diam !== "" && wrap !== "") {
-        let circum = toFraction(piPoints(diam,wrap));
-        return document.getElementById('circ').innerHTML = `<br><span class="head">Circ Marks:</span><br><br>${circum}`;
-    } else if (shell !=="" && lea !== "" && pit !== ""){
-        wrapCalc(shell,lea,pit);
-        loopAll(start,result2,pit);
-        const teem = formLat(latPoint);
-        reformat(teem);
-        return document.getElementById('lat').innerHTML = `<br><span class="head">Lat Marks:</span><br><br><span class="pole">||</span>${newText}`;
+    } else if(shellWrap.diameter !== null && shellWrap.wrapNum !== null) {
+        piPoints(shellWrap.diam,shellWrap.wrapNum);
+        const teem2 = formLat(shellWrap.points);
+        const slat2 = reformat(teem2);
+        return document.getElementById('circ').innerHTML = `<br><span class="head">Circ Marks:</span><br><br><span class="pole">||</span>${slat2}`;
+    } else if (shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null){
+        wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
+        loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
+        const teem = formLat(shellWrap.latPoint);
+        const slat = reformat(teem);
+        return document.getElementById('lat').innerHTML = `<br><span class="head">Lat Marks:</span><br><br><span class="pole">||</span>${slat}`;
     }
-}       
+};       
 
 function runAll(){
-    wrapCalc(shell,lea,pit);
-    loopAll(start,result2,pit);
-    piPoints(diam,wrap);
-    const teem = formLat(latPoint);
-    const teem2 = formLat(points);
+    wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
+    loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
+    piPoints(shellWrap.diameter,shellWrap.wrapNum);
+    const teem = formLat(shellWrap.latPoint);
+    const teem2 = formLat(shellWrap.points);
     const slat = reformat(teem);
     const slat2 = reformat(teem2);
     prin(slat, slat2);
-
-}
+};
 
 function toFraction(decimal){
    const wholeNumberPart = Math.floor(decimal);
    const decimalPart = decimal % 1;
    const roundedDecimalPart = Math.round(decimalPart * 16) / 16;
-   const newPart = wholeNumberPart + roundedDecimalPart;
    const decimalPlaces = decimalPart.toString().length - 2;
    const numerator = Math.round(roundedDecimalPart  * Math.pow(10, decimalPlaces)) 
    const denominator = Math.pow(10, decimalPlaces);
@@ -161,4 +152,4 @@ function toFraction(decimal){
    const simplifiedDenominator = denominator / divisor;
 
    return ` ${wholeNumberPart}  <span class="fracNum">${simplifiedNumerator}/${simplifiedDenominator}</span>`
-}
+};
