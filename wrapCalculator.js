@@ -62,7 +62,7 @@ function director(){
         return document.getElementById('circ').innerHTML = `<br><span class="head">Circ Marks:</span><br><br><span class="pole">||</span>${final2}`;
     } else if (shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null){
         wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
-        loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
+        loopAll(shellWrap.start,shellWrap.length,shellWrap.pitch);
         const format = formLat(shellWrap.latPoint);
         const final = reformat(format);
         return document.getElementById('lat').innerHTML = `<br><span class="head">Lat Marks:</span><br><br><span class="pole">||</span>${final}`;
