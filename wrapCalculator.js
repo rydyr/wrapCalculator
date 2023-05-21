@@ -72,7 +72,7 @@ function director(){
 // executor
 function runAll(){
     wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
-    loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
+    loopAll(shellWrap.start,shellWrap.length,shellWrap.pitch);
     piPoints(shellWrap.diameter,shellWrap.wrapNum);
     const format = formLat(shellWrap.latPoint);
     const format2 = formLat(shellWrap.points);
