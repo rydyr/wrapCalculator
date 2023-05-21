@@ -1,3 +1,5 @@
+
+//Global object - shellWrap encapsulates required variables.
 const shellWrap = {
     diameter: null,
     length: null,
@@ -11,10 +13,35 @@ const shellWrap = {
     points: [],
     isUnclicked: true,
 };
+// ****  UI  ****
 
+// eventlisteners 
 document.getElementById('button').addEventListener('click', eventHandler);
 document.getElementById('wrapNum').addEventListener('keyup',eventHandler);
 
+// eventhandler && trigger function
+function eventHandler(event){
+    if(event.type === 'click' || event.type === 'keyup' && event.key === 'Enter'){
+        toggleSwitch();
+    }
+ };
+
+ function toggleSwitch(){
+    if(shellWrap.isUnclicked){
+     anim();
+     document.getElementById('lat').innerHTML = "Loading...";
+     setTimeout(()=> {  
+        document.getElementById('lat').innerHTML = " ";
+        director();
+     },2000)
+    }else{
+        location.reload();
+    }
+    shellWrap.isUnclicked = !shellWrap.isUnclicked;
+    document.getElementById('button').value = "reset";
+ };
+
+ // animation
 function anim(){
    const animate = document.getElementById('title');
    animate.classList.add('animate');
@@ -23,27 +50,39 @@ function anim(){
    },2000);
 };
 
-function toggleSwitch(){
-   if(shellWrap.isUnclicked){
-    anim();
-    document.getElementById('lat').innerHTML = "Loading...";
-    setTimeout(()=> {  
-       document.getElementById('lat').innerHTML = " ";
-       director();
-    },2000)
-   }else{
-       location.reload();
-   }
-   shellWrap.isUnclicked = !shellWrap.isUnclicked;
-   document.getElementById('button').value = "reset";
+// director
+function director(){
+    getValue();
+    if(shellWrap.diameter !== null && shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null && shellWrap.wrapNum !== null){
+        runAll();
+    } else if(shellWrap.diameter !== null && shellWrap.wrapNum !== null) {
+        piPoints(shellWrap.diam,shellWrap.wrapNum);
+        const format2 = formLat(shellWrap.points);
+        const final2 = reformat(format2);
+        return document.getElementById('circ').innerHTML = `<br><span class="head">Circ Marks:</span><br><br><span class="pole">||</span>${final2}`;
+    } else if (shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null){
+        wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
+        loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
+        const format = formLat(shellWrap.latPoint);
+        const final = reformat(format);
+        return document.getElementById('lat').innerHTML = `<br><span class="head">Lat Marks:</span><br><br><span class="pole">||</span>${final}`;
+    }
 };
 
-function eventHandler(event){
-   if(event.type === 'click' || event.type === 'keyup' && event.key === 'Enter'){
-       toggleSwitch();
-   }
+// executor
+function runAll(){
+    wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
+    loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
+    piPoints(shellWrap.diameter,shellWrap.wrapNum);
+    const format = formLat(shellWrap.latPoint);
+    const format2 = formLat(shellWrap.points);
+    const final = reformat(format);
+    const final2 = reformat(format2);
+    document.getElementById('lat').innerHTML = `<br><span class="head">Lat marks:</span><br><br><span class="pole">||</span>${final}`;
+    document.getElementById('circ').innerHTML = `<br><span class="head">Circ marks:</span><br><br><span class="pole">||</span>${final2}`;
 };
 
+// value assignment
 function getValue(){
    shellWrap.diameter = document.getElementById('diameter').value;
    shellWrap.length = document.getElementById('length').value;
@@ -52,6 +91,9 @@ function getValue(){
    shellWrap.wrapNum = document.getElementById('wrapNum').value;
 };
 
+// ****  CALCULATIONS  ****
+
+// lat marks
 function wrapCalc(shellLength,lead,pitch){
     const result = Math.floor(shellLength / lead);
     shellWrap.result = result * lead;
@@ -73,16 +115,7 @@ function loopAll(val1,val2,val3){
     } return shellWrap.latPoint;
 };
 
-function formLat(arr){
-    return arr.map((number,index) => (index + 1) % 5 === 0 ? `${number}<br><br>` : number)
-    .join(' || ');
-};
-
-function reformat(str){
-    shellWrap.newText = str.replace(/[\|]/g, '<span class="pole">|</span>')
-    return shellWrap.newText;
-};
-
+// circ marks
 function piPoints(diam,wrapNum){
     if(diam === 0 || wrapNum === 0){
         return;
@@ -100,40 +133,20 @@ function piPoints(diam,wrapNum){
     return shellWrap.points;
 };
 
-function prin(var1,var2){
-    document.getElementById('lat').innerHTML = `<br><span class="head">Lat marks:</span><br><br><span class="pole">||</span>${var1}`;
-    document.getElementById('circ').innerHTML = `<br><span class="head">Circ marks:</span><br><br><span class="pole">||</span>${var2}`;
+// ****  FORMATING  ****
+
+// line breaks and pole spans
+function formLat(arr){
+    return arr.map((number,index) => (index + 1) % 5 === 0 ? `${number}<br><br>` : number)
+    .join(' || ');
 };
 
-function director(){
-    getValue();
-    if(shellWrap.diameter !== null && shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null && shellWrap.wrapNum !== null){
-        runAll();
-    } else if(shellWrap.diameter !== null && shellWrap.wrapNum !== null) {
-        piPoints(shellWrap.diam,shellWrap.wrapNum);
-        const teem2 = formLat(shellWrap.points);
-        const slat2 = reformat(teem2);
-        return document.getElementById('circ').innerHTML = `<br><span class="head">Circ Marks:</span><br><br><span class="pole">||</span>${slat2}`;
-    } else if (shellWrap.length !== null && shellWrap.lead !== null && shellWrap.pitch !== null){
-        wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
-        loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
-        const teem = formLat(shellWrap.latPoint);
-        const slat = reformat(teem);
-        return document.getElementById('lat').innerHTML = `<br><span class="head">Lat Marks:</span><br><br><span class="pole">||</span>${slat}`;
-    }
-};       
-
-function runAll(){
-    wrapCalc(shellWrap.length,shellWrap.lead,shellWrap.pitch);
-    loopAll(shellWrap.start,shellWrap.result,shellWrap.pitch);
-    piPoints(shellWrap.diameter,shellWrap.wrapNum);
-    const teem = formLat(shellWrap.latPoint);
-    const teem2 = formLat(shellWrap.points);
-    const slat = reformat(teem);
-    const slat2 = reformat(teem2);
-    prin(slat, slat2);
+function reformat(str){
+    shellWrap.newText = str.replace(/[\|]/g, '<span class="pole">|</span>')
+    return shellWrap.newText;
 };
 
+// decimal to fractio conversion
 function toFraction(decimal){
    const wholeNumberPart = Math.floor(decimal);
    const decimalPart = decimal % 1;
